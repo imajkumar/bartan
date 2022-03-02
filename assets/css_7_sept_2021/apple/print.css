@@ -1,0 +1,78 @@
+@media print {
+      
+      .header, .footer, .footer-copyright, .sidebar, .sidebar-bg, .breadcrumb, .page-header, .hidden-print, .checkout-footer, .checkout-header, .none {
+      	display: none
+      }
+    .content {
+    		margin-left: 0px;
+    	}
+
+      .container, .container-lg, .container-md, .container-sm, .container-xl {
+    	max-width: 100%;
+    	padding: 0px;
+    	margin: 0px;
+	}
+
+	.page-header-fixed {
+     padding-top: 50px; 
+ }
+
+td, th{
+	padding: 0px;
+	color: #000 !important
+}
+address, .afsc-header p, .afsc-header ol, li, .tx-in p, .invoice .invoice-date, .afsc-header-welcome {
+    font-size: 20px !important;
+    line-height: 1.4;
+    text-align: left;
+}
+.invoice-detail {
+   font-size: 15px !important;
+    line-height: 1.4;
+}
+
+.invoice-to, .m-t-5, .text-inverse{
+	width: 50%;
+	
+}
+
+.row>[class^=col-] {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.col-lg-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+.invoice-to, .text-inverse, .invoice-detail{
+  width: 50% !important;
+  float: left
+}
+.w-30{
+  width: 100% !important
+}
+
+.break{
+  display: table !important;
+}
+
+
+.invoice .invoice-date {
+    width: 50% !important;
+  float: left
+}
+.tx-in p {
+    text-align: center !important;
+    line-height: 1.3;
+}
+.table-print {
+       display: block;
+    width: 65px !important;
+    overflow-x: inherit;
+    -webkit-overflow-scrolling: touch;
+}
+.wth{
+   width: 6.5rem !important; 
+}
+      }
+

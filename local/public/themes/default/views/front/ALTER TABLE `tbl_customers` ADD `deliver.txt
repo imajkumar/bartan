@@ -1,0 +1,1 @@
+ALTER TABLE `tbl_customers` ADD `delivery_charge` FLOAT(10,2) NULL AFTER `minimum_order`, ADD `packing_charge` FLOAT(10,2) NULL AFTER `delivery_charge`, ADD `delivery_discount` FLOAT(10,2) NULL AFTER `packing_charge`, ADD `packing_discount` FLOAT(10,2) NULL AFTER `delivery_discount`;

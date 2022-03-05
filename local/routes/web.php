@@ -511,7 +511,7 @@ Route::get('/test_notification', 'UserController@test_not')->name('test_not');
     
 // }]);
 //End customer
-
+//this is 
 Route::get('/pages', 'UserController@pages')->name('pages'); 
 Route::get('/add-page', 'UserController@addPage')->name('addPage');
 Route::post('/save-page', 'UserController@savePage')->name('savePage');

@@ -466,6 +466,9 @@ Route::get('/viewToBeProccessTabOrderAdmin/{order_id}', 'UserController@viewToBe
 Route::get('/viewPackedOrderAdmin/{order_id}', 'UserController@viewPackedOrderAdmin')->name('viewPackedOrderAdmin');
 Route::get('/viewShipedOrderAdmin/{order_id}', 'UserController@viewShipedOrderAdmin')->name('viewShipedOrderAdmin');
 Route::get('/viewDeliveredOrderAdmin/{order_id}', 'UserController@viewDeliveredOrderAdmin')->name('viewDeliveredOrderAdmin');
+Route::get('/viewDeliveredOrderAdminPoint/{order_id}', 'UserController@viewDeliveredOrderAdminPoint')->name('viewDeliveredOrderAdminPoint');
+
+
 
 
 
@@ -518,10 +521,21 @@ Route::get('/delete-page/{id}', 'UserController@deletePage')->name('deletePage')
 
 
 Route::get('/pincode', 'UserController@pincode')->name('pincode'); 
+Route::get('/masterpoints', 'UserController@masterpoints')->name('masterpoints'); 
+
+
+
+Route::get('/orderWisepoints', 'UserController@orderWisepoints')->name('orderWisepoints'); 
+Route::get('/myOrderPointList', 'UserController@myOrderPointList')->name('myOrderPointList'); 
+
+
 Route::get('/add-pincode', 'UserController@addPincode')->name('addPincode');
 Route::post('/save-pincode', 'UserController@savePincode')->name('savePincode');
 Route::get('/edit-pincode/{id}', 'UserController@editPincode')->name('editPincode');
 Route::post('/update-pincode/{id}', 'UserController@updatePincode')->name('updatePincode');
 Route::get('/delete-pincode/{id}', 'UserController@deletePincode')->name('deletePincode');
 Route::get('/exportPincode', 'UserController@exportPincode')->name('exportPincode');
+Route::get('/exportPointMaster', 'UserController@exportPointMaster')->name('exportPointMaster');
+
 Route::post('/pincodeImport', 'UserController@pincodeImport')->name('pincodeImport');
+Route::post('/pointMasterImport', 'UserController@pointMasterImport')->name('pointMasterImport');

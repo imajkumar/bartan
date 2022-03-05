@@ -645,6 +645,27 @@ class UserController extends Controller
         return $theme->scope('admin.view_shipped_orderAdmin', compact('itemOrders', 'itemShippedOrders'))->render();
     }
 	
+    public function viewDeliveredOrderAdminPoint($shiping_no)
+    {
+		
+		
+		$itemOrders = DB::table('shipped_orders')
+            //->rightjoin('tbl_item_orders', 'tbl_item_orders.order_id', '=', 'tbl_payment_status.item_order_id')
+            ->leftJoin('tbl_item_orders', 'shipped_orders.packing_no', '=', 'tbl_item_orders.packing_no')
+            
+            
+            ->where('shipped_orders.shiping_no', $shiping_no)
+            ->where('shipped_orders.order_stage', 4)
+            ->select('tbl_item_orders.*','tbl_item_orders.order_id', 'tbl_item_orders.stage')
+			->distinct()
+            ->get();
+        
+     							
+
+        $theme = Theme::uses('backend')->layout('layout');
+        return $theme->scope('admin.pincode.view_delivered_orderAdminPoint', compact('itemOrders'))->render();
+    }
+    
 	public function viewDeliveredOrderAdmin($shiping_no)
     {
 		
@@ -9445,6 +9466,188 @@ class UserController extends Controller
     }
 
     
+
+    //points system 
+
+    //user side
+    // myOrderPointList
+    public function myOrderPointList()
+    {
+        $userArr=DB::table('users')->where('id',Auth::user()->id)->first();
+        $userCurrArr=DB::table('tbl_customers')->where('user_id',$userArr->id)->first();
+
+
+        $itemOrders = DB::table('shipped_orders')
+        //->rightjoin('tbl_item_orders','tbl_item_orders.order_id','=','tbl_payment_status.item_order_id')
+        ->orderBy('shipped_orders.id', 'desc')
+        ->where('order_stage', 4)
+        // ->where('customer_id', $userCurrArr->id)
+        ->get();
+
+        $itemOrders = unique_multidim_array(json_decode(json_encode($itemOrders), true), 'shiping_no');
+
+    
+
+        $theme = Theme::uses('backend')->layout('layout');
+       
+        
+        return $theme->scope('admin.pincode.orderwisepoints_list',  compact('itemOrders'))->render();
+
+        
+        
+    }
+
+    //user side
+    //orderWisepoints
+    public function orderWisepoints()
+    {
+
+        $itemOrders = DB::table('shipped_orders')
+        //->rightjoin('tbl_item_orders','tbl_item_orders.order_id','=','tbl_payment_status.item_order_id')
+        ->orderBy('shipped_orders.id', 'desc')
+        ->where('order_stage', 4)
+        ->get();
+    $itemOrders = unique_multidim_array(json_decode(json_encode($itemOrders), true), 'shiping_no');
+
+    
+
+        $theme = Theme::uses('backend')->layout('layout');
+       
+        
+        return $theme->scope('admin.pincode.orderwisepoints_list',  compact('itemOrders'))->render();
+
+        
+        
+    }
+    //orderWisepoints
+     //masterpoints
+     public function masterpoints()
+     {
+         $theme = Theme::uses('backend')->layout('layout');
+         $pointsLists=DB::table('mst_point_system')->get();
+         
+         return $theme->scope('admin.pincode.masterpoints_list', compact('pointsLists'))->render();
+         
+         
+     }
+     //masterpoints
+     //pointMasterImport
+    public function pointMasterImport(Request $request)
+    {
+        
+        $validator = Validator::make(
+            [
+                'mp_csvfile' => $request,
+                'extension' => strtolower($request->mp_csvfile->getClientOriginalExtension()),
+            ],
+            [
+                'mp_csvfile' => 'required',
+                'extension' => 'required|in:csv',
+            ]
+        )->validate();
+        
+        
+        if ($file = $request->hasFile('mp_csvfile')) {
+           
+            
+            $file = $request->file('mp_csvfile');
+            $fileName = time() . $file->getClientOriginalName();
+            $destinationPath = ITEM_IMG_PATH;
+           
+            $file->move($destinationPath, $fileName);
+            $file = 'gallery/'.$fileName;
+            
+            $pointMasterArr = $this->csvToArray($file);
+           
+
+            
+            $handle = fopen($file, 'r');
+            // $fields = fgetcsv($handle,$file,';');
+            
+            foreach($pointMasterArr as $x => $row) {
+                $itemID=$row[0];
+                $itemPoints=$row[3];
+                $action=$row[4];
+                if($action==1){
+                    $affected = DB::table('mst_point_system')
+                    ->where('item_id', $itemID)
+                    ->update(['item_point' => $itemPoints]);
+                      
+                }              
+               
+            }
+
+            
+
+           
+
+            $request->session()->flash('message', 'point master imported successfully.');
+            $request->session()->flash('message-type', 'success');
+            return redirect()->route('masterpoints')
+                ->with('success','Point master imported successfully.');
+
+            
+        }else{
+            $request->session()->flash('message', 'Error! Try again.');
+                    $request->session()->flash('message-type', 'warning');
+                    return redirect()->route('pincode')
+                        ->with('warning','Error! Try again.');
+        }
+                  
+    }
+
+    //pointMasterImport
+    public function exportPointMaster()
+    {
+       $pincodes = DB::table('mst_point_system')->orderBy('item_id', 'DESC')->get();
+    
+        $headers = array(
+            'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Content-Disposition' => 'attachment; filename=abc.csv',
+            'Expires' => '0',
+            'Pragma' => 'public',
+        );
+        $filename = "gallery/pincodes.csv";
+        $handle = fopen($filename, 'w');
+        fputcsv($handle, [
+            "Item ID",
+            "Item Name",
+            "Item SKU",            
+            "Points",
+            "Action",
+            
+        ]);
+        $i = 1;
+        
+        
+            foreach($pincodes as $pincode){
+
+                
+               
+                 
+             fputcsv($handle, [
+                
+               
+                @$pincode->item_id,
+                @$pincode->item_name,
+                @$pincode->item_sku,
+                @$pincode->item_point,
+                0
+                            
+           
+    
+            ]);
+            $i++;
+        }
+        // echo chop($tagName,",");
+        //exit;
+        
+        fclose($handle);
+        return Response::download($filename, "pointsmaster.csv", $headers);
+    }
+
+    //points system 
 
 
 

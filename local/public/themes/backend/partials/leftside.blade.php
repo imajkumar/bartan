@@ -176,6 +176,14 @@
 						</a>
 						
 					</li>
+					<li class="{{($route_name == 'myOrderPointList') ? 'active':'has-sub'}}">
+						<a href="{{route('myOrderPointList')}}" target="_blank">
+							
+							<i class="icon-graph"></i>
+							<span>MY Points</span>
+						</a>
+						
+					</li>
 
 					{{-- <li class="has-sub">
 						<a href="{{route('addresses')}}">
@@ -629,7 +637,22 @@
 
 					<?php }?>
 			
-			
+					<li class="{{($route_name == 'masterpoints') ? 'active':'has-sub'}}">
+						<a href="{{route('masterpoints')}}">
+							
+							<i class="icon-graph"></i>
+							<span>Master Points</span>
+						</a>
+						
+					</li>
+					<li class="{{($route_name == 'orderWisepoints') ? 'active':'has-sub'}}">
+						<a href="{{route('orderWisepoints')}}">
+							
+							<i class="icon-graph"></i>
+							<span>Orders Points</span>
+						</a>
+						
+					</li>
 
 			
 		

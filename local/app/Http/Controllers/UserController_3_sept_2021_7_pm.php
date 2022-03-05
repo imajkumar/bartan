@@ -407,6 +407,33 @@ class UserController extends Controller
         return $theme->scope('admin.view_shipped_orderAdmin', compact('itemOrders'))->render();
     }
 	
+    //viewDeliveredOrderAdminPoint
+    public function viewDeliveredOrderAdminPoint($shiping_no)
+    {
+		
+		
+		$itemOrders = DB::table('shipped_orders')
+            //->rightjoin('tbl_item_orders', 'tbl_item_orders.order_id', '=', 'tbl_payment_status.item_order_id')
+            ->leftJoin('tbl_item_orders', 'shipped_orders.packing_no', '=', 'tbl_item_orders.packing_no')
+            
+            
+            ->where('shipped_orders.shiping_no', $shiping_no)
+            ->where('shipped_orders.order_stage', 4)
+            ->select('tbl_item_orders.*','tbl_item_orders.order_id', 'tbl_item_orders.stage')
+			->distinct()
+            ->get();
+        
+        //$itemOrders = unique_multidim_array(json_decode(json_encode($itemOrders), true), 'packing_no');
+        
+		//$itemOrders = json_decode($itemOrders);
+			//pr($itemOrders);							
+
+        $theme = Theme::uses('backend')->layout('layout');
+        return $theme->scope('admin.view_delivered_orderAdmin', compact('itemOrders'))->render();
+    }
+
+    //viewDeliveredOrderAdminPoint
+
 	public function viewDeliveredOrderAdmin($shiping_no)
     {
 		
